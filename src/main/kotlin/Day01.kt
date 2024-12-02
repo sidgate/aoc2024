@@ -2,21 +2,24 @@ import kotlin.math.abs
 
 fun main() {
 
-    val (list1, list2) =  getLines("input/day01.2.txt").map {
-        it.split(Regex("\\s+")).map { it.toInt() }
-    }.fold(Pair(emptyList<Int>(), emptyList<Int>())){acc, pair ->
-        acc.first+pair[0] to acc.second + pair[1]
-    }
+    val regex = Regex("\\s+")
+    val (list1, list2) = getLines("input/day01.1.txt").map {
+        it.split(regex).map { it.toLong() }.let {
+            it[0] to it[1]
+        }
+    }.unzip()
 
 
-    println(list1.sorted().zip(list2.sorted()).map {
+    val result1 = list1.sorted().zip(list2.sorted()).map {
         abs(it.first - it.second)
-    }.sum())
+    }.sum()
+    println(result1)
 
     val list2Count = list2.groupingBy { it }.eachCount()
 
-    println(list1.map {
-        (list2Count[it] ?: 0) * it
-    }.sum())
+    val result2 = list1.map {
+        list2Count.getOrDefault(it, 0) * it
+    }.sum()
+    println(result2)
 
 }
